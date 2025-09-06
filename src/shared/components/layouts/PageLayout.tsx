@@ -122,7 +122,9 @@ const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
             }}
           >
             <LoadingIcon loop={false} />
-            <Spinner size={180} dotSize={34}/>
+            <div className="absolute scale-50 sm:scale-100">
+              <Spinner size={180} dotSize={34}/>
+            </div>
           </div>
         )}
       </div>

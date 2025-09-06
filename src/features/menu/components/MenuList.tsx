@@ -133,7 +133,7 @@ export function MenuList({
                             know about me
                         </button>
                         <a href={socials.twitter} className={iconStyle} target="_blank" rel="noopener noreferrer">
-                            <img src={twitter} className="w-12 px-2" />
+                            <img src={twitter} className="w-5 sm:w-12 sm:px-2 pr-1 sm:pr-2" />
                         </a>
                     </MenuListItem>
 
@@ -146,7 +146,7 @@ export function MenuList({
                             commissions
                         </button>
                         <a href={socials.pixiv} className={iconStyle} target="_blank" rel="noopener noreferrer">
-                            <img src={pixiv} className="w-12 px-2" />
+                            <img src={pixiv} className="w-5 sm:w-12 sm:px-2 pr-1 sm:pr-2" />
                         </a>
                     </MenuListItem>
 
@@ -159,7 +159,7 @@ export function MenuList({
                             humble blog
                         </button>
                         <a href={socials.instagram} className={iconStyle} target="_blank" rel="noopener noreferrer">
-                            <img src={instagram} className="w-12 px-2" />
+                            <img src={instagram} className="w-5 sm:w-12 sm:px-2 pr-1 sm:pr-2" />
                         </a>
                     </MenuListItem>
 
@@ -172,7 +172,7 @@ export function MenuList({
                             art gallery
                         </button>
                         <a href={socials.discord} className={iconStyle} target="_blank" rel="noopener noreferrer">
-                            <img src={discord} className="w-12 px-2" />
+                            <img src={discord} className="w-5 sm:w-12 sm:px-2 pr-1 sm:pr-2" />
                         </a>
                     </MenuListItem>
 
@@ -185,7 +185,7 @@ export function MenuList({
                             neat stuff
                         </button>
                         <a href={`mailto:${socials.email}`} className={iconStyle} target="_blank" rel="noopener noreferrer">
-                            <img src={email} className="w-12 px-1.5" />
+                            <img src={email} className="w-5 sm:w-12 sm:px-1.5 pr-1 sm:pr-1.5" />
                         </a>
                     </MenuListItem>
                 </div>

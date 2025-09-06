@@ -7,7 +7,7 @@ export default function LoadingIcon({
 }) {
   return (
     <motion.div 
-      className='absolute border-4 border-white/50 w-[300px] h-[300px] flex flex-col p-2'
+      className='absolute border-2 sm:border-4 border-white/50 w-[150px] h-[150px] sm:w-[300px] sm:h-[300px] flex flex-col p-2'
       animate={{
         rotateZ: [0, 765],
       }}
