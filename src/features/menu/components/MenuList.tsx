@@ -62,6 +62,7 @@ export function MenuList({
     onGalleryClicked = () => {},
     onMiscClicked = () => {},
     visible = true,
+    showEditor
 }: {
     onAboutClicked?: () => void;
     onCommsClicked?: () => void;
@@ -69,6 +70,7 @@ export function MenuList({
     onGalleryClicked?: () => void;
     onMiscClicked?: () => void;
     visible?: boolean;
+    showEditor: () => boolean;
 }) {
     const [isSmallScreen, setIsSmallScreen] = useState(false);
     const [socials, setSocials] = useState<{ [key: string]: string }>({});
@@ -190,38 +192,40 @@ export function MenuList({
                     </MenuListItem>
                 </div>
             )}
-            <div key="editable-fields" className='flex flex-col w-64 absolute bottom-4 end-4'>
-                <EditableField
-                    defaultValue={socials.twitter}
-                    path={`socials`}
-                    field="twitter"
-                    label="twitter"
-                />
-                <EditableField
-                    defaultValue={socials.pixiv}
-                    path={`socials`}
-                    field="pixiv"
-                    label="pixiv"
-                />
-                <EditableField
-                    defaultValue={socials.instagram}
-                    path={`socials`}
-                    field="instagram"
-                    label="instagram"
-                />
-                <EditableField
-                    defaultValue={socials.discord}
-                    path={`socials`}
-                    field="discord"
-                    label="discord"
-                />
-                <EditableField
-                    defaultValue={socials.email}
-                    path={`socials`}
-                    field="email"
-                    label="email"
-                />
-            </div>
+            { showEditor() && 
+                <div key="editable-fields" className='flex flex-col w-64 absolute bottom-4 end-4'>
+                    <EditableField
+                        defaultValue={socials.twitter}
+                        path={`socials`}
+                        field="twitter"
+                        label="twitter"
+                    />
+                    <EditableField
+                        defaultValue={socials.pixiv}
+                        path={`socials`}
+                        field="pixiv"
+                        label="pixiv"
+                    />
+                    <EditableField
+                        defaultValue={socials.instagram}
+                        path={`socials`}
+                        field="instagram"
+                        label="instagram"
+                    />
+                    <EditableField
+                        defaultValue={socials.discord}
+                        path={`socials`}
+                        field="discord"
+                        label="discord"
+                    />
+                    <EditableField
+                        defaultValue={socials.email}
+                        path={`socials`}
+                        field="email"
+                        label="email"
+                    />
+                </div>
+            }
         </AnimatePresence>
     );
 }

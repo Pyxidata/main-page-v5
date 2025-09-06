@@ -196,7 +196,7 @@ export default function Menu() {
       bgLinks={Object.values(bgLinks)}
     >
       <AnimatePresence>
-        {auth.currentUser && isEditMode && (
+        {auth.currentUser && isEditMode && (menuState === MenuState.Default || menuState === MenuState.Init) && (
           <motion.div
             className="fixed top-10 sm:right-4 bg-gray-900/80 backdrop-blur-sm p-4 rounded-lg shadow-xl z-[1001] border border-gray-700 overflow-x-auto w-[90%] max-w-[600px]"
             initial={{ y: -50, opacity: 0 }}
@@ -553,6 +553,9 @@ export default function Menu() {
           setMenuListVisible(false)
         }}
         visible={menuListVisible}
+        showEditor={() => {
+          return menuState === MenuState.Init || menuState === MenuState.Default
+        }}
       />
     </PageLayout>
   );
