@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '../../../util/cn';
 import LoadingIcon from '../decorations/LoadingIcon';
 import defaultColor from '../../colors.json';
+import Spinner from '../decorations/Spinner';
 
 type PageLayoutProps = {
   children: ReactNode;
@@ -12,11 +13,8 @@ type PageLayoutProps = {
   noLoad?: boolean;
   longLoad?: boolean;
   bgLinks?: string[];
-  /** Crossfade duration in ms */
   fadeMs?: number;
-  /** Time between switches in ms (includes dwell time while fully visible) */
   intervalMs?: number;
-  /** Initial delay before the first switch in ms */
   initialDelayMs?: number;
 };
 
@@ -42,7 +40,6 @@ const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
     const startTimerRef = useRef<number | null>(null);
     const cycleTimerRef = useRef<number | null>(null);
 
-    // Loading overlay timing (kept as-is)
     useEffect(() => {
       const fadeOut = window.setTimeout(
         () => setLoadingOpacity(0),
@@ -58,7 +55,6 @@ const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
       };
     }, [noLoad, quickLoad, longLoad]);
 
-    // Preload images to avoid flashes during the first crossfade
     useEffect(() => {
       bgLinks.forEach((src) => {
         const img = new Image();
@@ -66,12 +62,10 @@ const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
       });
     }, [bgLinks]);
 
-    // Background cycling (simple index bump; AnimatePresence handles the crossfade)
     useEffect(() => {
       if (bgLinks.length <= 1) return;
 
       startTimerRef.current = window.setTimeout(() => {
-        // Advance once at start so the first transition is predictable
         setCurrentBgIndex((i) => (i + 1) % bgLinks.length);
         cycleTimerRef.current = window.setInterval(() => {
           setCurrentBgIndex((i) => (i + 1) % bgLinks.length);
@@ -86,7 +80,6 @@ const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
 
     return (
       <div className="relative w-full flex justify-center h-screen overflow-hidden">
-        {/* Background crossfade */}
         {bgLinks.length > 0 && (
           <div className="absolute inset-0">
             <AnimatePresence>
@@ -102,7 +95,7 @@ const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
                 exit={{ opacity: 0, scale: 1 }}
                 transition={{
                   opacity: { duration: fadeMs / 1000, ease: "easeInOut" },
-                  scale: { duration: intervalMs / 1000, ease: "linear" }, // zoom spans full interval
+                  scale: { duration: intervalMs / 1000, ease: "linear" },
                 }}
               />
             </AnimatePresence>
@@ -129,6 +122,7 @@ const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
             }}
           >
             <LoadingIcon loop={false} />
+            <Spinner size={180} dotSize={34}/>
           </div>
         )}
       </div>

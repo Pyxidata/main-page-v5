@@ -1,7 +1,7 @@
 
 export default function Spinner({
   size = 60,
-  dotSize = 10,
+  dotSize = 16,
   animationDuration = '2s',
 } : {
   size?: number;
