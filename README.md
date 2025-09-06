@@ -1,7 +1,7 @@
 # main-page-v5
 
 <p align="center">
-  <img src="" alt="Icon" title="icon">
+  <img src="https://raw.githubusercontent.com/Pyxidata/main-page-v5/refs/heads/main/src/assets/pfp.png" alt="Icon" title="icon">
 </p>
 
 <h1>
@@ -9,11 +9,11 @@
 </h1>
 
 <p>
-  A personal website containing introducing myself along with pages for viewing mypersonal projects, blogs, portfolio, etc.
+  A personal art website containing introducing myself along with pages for viewing my drawings, blogs, social media links, etc.
 </p>
 
 <h1>
-  Completeness: 🟠🟠⚪⚪⚪
+  Completeness: 🟢🟢🟢🟢⚪
 </h1>
 
 <dl>
