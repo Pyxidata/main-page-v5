@@ -1,0 +1,22 @@
+.thick-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.thick-scrollbar::-webkit-scrollbar-track {
+  border-radius: 6px;
+}
+
+.thick-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  cursor: grab;
+}
+
+.thick-scrollbar::-webkit-scrollbar-thumb:active {
+  cursor: grabbing;
+}
+
+.thick-scrollbar {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(127, 127, 127) rgba(255, 255, 255, 0.1);
+;
+}
