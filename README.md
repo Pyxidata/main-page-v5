@@ -4,6 +4,12 @@
   <img src="https://raw.githubusercontent.com/Pyxidata/main-page-v5/refs/heads/main/src/assets/pfp.png" alt="Icon" title="icon">
 </p>
 
+<p>
+  <a href="https://pyxidata.github.io/main-page-v5/" target="_blank" rel="noopener noreferrer">
+    Click this link to open this website.
+  </a>
+</p>
+
 <h1>
   Description
 </h1>
