@@ -37,32 +37,33 @@ type GalleryItemWithFirebaseKey = GalleryItem & { firebaseKey: string };
 export default function GallerysFragment({ getCoordinatesRef, scrollableParentRef, activeFragmentKey }: GallerysFragmentProps) {
   const { isEditMode } = useUserStore();
   const [localGallerys, setLocalGallerys] = useState<GalleryItemWithFirebaseKey[]>([]);
+  const [imgEnabled, setImgEnabled] = useState(false);
 
   const galleryItemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const initialScrollDoneRef = useRef(false);
 
-  useEffect(() => {
-    const galleryRef = ref(db, 'gallery/');
-    const unsubscribe = onValue(galleryRef, (snapshot) => {
-      const data = snapshot.val();
-      const loadedGallerys: GalleryItemWithFirebaseKey[] = [];
-      if (data) {
-        Object.keys(data).forEach((key) => {
-          loadedGallerys.push({
-            firebaseKey: key,
-            ...data[key],
-            color: data[key].color || "#ffffff",
-          });
-        });
-      }
-      loadedGallerys.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
-      setLocalGallerys(loadedGallerys);
-    });
+  useEffect(() => {
+    const galleryRef = ref(db, 'gallery/');
+    const unsubscribe = onValue(galleryRef, (snapshot) => {
+      const data = snapshot.val();
+      const loadedGallerys: GalleryItemWithFirebaseKey[] = [];
+      if (data) {
+        Object.keys(data).forEach((key) => {
+          loadedGallerys.push({
+            firebaseKey: key,
+            ...data[key],
+            color: data[key].color || "#ffffff",
+          });
+        });
+      }
+      loadedGallerys.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+      setLocalGallerys(loadedGallerys);
+    });
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const calculateGalleryData = useCallback(() => {
     const data: FragmentItemData[] = [];
@@ -155,6 +156,13 @@ export default function GallerysFragment({ getCoordinatesRef, scrollableParentRe
     remove(artRef);
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setImgEnabled(true)
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="flex flex-col items-center w-full">
       <Spacer className={SpacerStyle.Paragraph} />
@@ -244,7 +252,9 @@ export default function GallerysFragment({ getCoordinatesRef, scrollableParentRe
               <div className="flex-1 w-full flex gap-2 items-center lg:overflow-x-auto">
                 {item.arts && Object.entries(item.arts).map(([artKey, art]) => (
                   <div key={artKey} className="relative group flex-shrink-0">
-                    <img src={art.img} alt="Art" className="h-64 object-contain rounded-md" />
+                    {imgEnabled &&
+                      <img src={art.img} alt="Art" className="h-64 object-contain rounded-md" />
+                    }
                     <EditableField
                       defaultValue={art.img || ""}
                       path={`gallery/${item.firebaseKey}/arts/${artKey}`}
