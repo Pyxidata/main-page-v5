@@ -80,6 +80,7 @@ export default function BlogViewer({ initialBlogData, onBack }: BlogViewerProps)
   };
 
   const currentTags = stringToTags(blogPost.tag);
+  const contentWithLineBreaks = blogPost.content.replace(/\n/g, '<br/>\n\n\n');
 
   return (
     <div className="w-screen flex justify-center overflow-y-auto no-scrollbar">
@@ -184,11 +185,14 @@ export default function BlogViewer({ initialBlogData, onBack }: BlogViewerProps)
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
             >
-              <div className={`prose prose-invert w-full text-start md:max-w-[800px] overflow-auto flex-grow opacity-70 pt-4 text-xs sm:text-sm whitespace-pre-wrap`}>
+              <div
+                className={`prose prose-invert w-full text-start md:max-w-[800px] overflow-y-auto overflow-x-clip flex-grow opacity-70 pt-4 text-xs sm:text-sm`}
+                style={{ lineHeight: 0.5 }}
+              >
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm, remarkBreaks]}
                   rehypePlugins={[rehypeRaw]}
-                  children={blogPost.content}
+                  children={contentWithLineBreaks}
                   components={{
                     code({ node, className, children, ref, ...props }) {
                       const match = /language-(\w+)/.exec(className || '');

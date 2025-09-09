@@ -188,7 +188,7 @@ export default function Menu() {
   }, []);
 
   const half = (value: number) => isMobile ? value / 2 : value;
-  const squareStyle = 'absolute border-white/50 w-[300px] h-[300px] flex flex-col';
+  const squareStyle = 'absolute border-white/50 w-[150] sm:w-[300px] h-[150px] sm:h-[300px] flex flex-col';
 
   return (
     <PageLayout

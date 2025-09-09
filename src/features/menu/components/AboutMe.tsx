@@ -40,7 +40,7 @@ useEffect(() => {
 
       <AnimatePresence>
         <motion.div
-        className='absolute top-3 sm:top-16'
+        className='absolute top-3 sm:top-12'
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0 }}
@@ -56,12 +56,12 @@ useEffect(() => {
 
       <Text 
         text="hihi! im pyxidataa, also known as kevin or k chan" 
-        className={cn(TextStyle.Body, "text-[9px] sm:text-base mt-28 sm:mt-52")}
+        className={cn(TextStyle.Body, "text-[8px] sm:text-base mt-28 sm:mt-52")}
         animate
       />
 
       <EditableText
-        className={cn(TextStyle.Body, "text-[9px] sm:text-base leading-[1.2]")}
+        className={cn(TextStyle.Body, "text-[8px] sm:text-base leading-[1.2]")}
         defaultText={data?.text || ""}
         useTextArea
         path="aboutMe"
