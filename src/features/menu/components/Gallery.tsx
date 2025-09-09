@@ -368,9 +368,6 @@ export default function Gallery() {
     const targetItemCenterY = targetFragment.y + targetFragment.height / 2;
     const relativeTargetY = targetItemCenterY - minY;
 
-    console.log(targetItemCenterY)
-      console.log(relativeTargetY)
-
     let targetScrollPercentage = 0;
     if (totalContentHeightBetweenExtremes > 0) {
       targetScrollPercentage = relativeTargetY / totalContentHeightBetweenExtremes;
