@@ -7,8 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import GallerysFragment from "./GalleryFragment";
 import { cn } from "../../../util/cn";
 
-// ... (Rest of your imports and type definitions remain the same)
-
 export interface FragmentItemData {
   key: string;
   x: number;
@@ -370,13 +368,16 @@ export default function Gallery() {
     const targetItemCenterY = targetFragment.y + targetFragment.height / 2;
     const relativeTargetY = targetItemCenterY - minY;
 
+    console.log(targetItemCenterY)
+      console.log(relativeTargetY)
+
     let targetScrollPercentage = 0;
     if (totalContentHeightBetweenExtremes > 0) {
       targetScrollPercentage = relativeTargetY / totalContentHeightBetweenExtremes;
     }
 
     const internalScrollableHeight = scrollDiv.scrollHeight - scrollDiv.offsetHeight;
-    const finalScrollTop = targetScrollPercentage * internalScrollableHeight;
+    const finalScrollTop = targetScrollPercentage * internalScrollableHeight + 10;
 
     scrollDiv.scrollTo({
       top: finalScrollTop,
