@@ -10,15 +10,16 @@ import AboutMe from './components/AboutMe';
 import { useUserStore } from '../../shared/stores/userStore';
 import Comms from './components/Comms';
 import Misc from './components/Misc';
-import Gallery from './components/Gallery';
 import BlogPage from '../blog/BlogPage';
 import { TextStyle } from '../../shared/styles/TextStyle';
-import EditableField from '../../shared/components/editables/EditableField';
+import TimelineGallery from './components/TimelineGallery';
+import GalleryMenu from './components/GalleryMenu';
+import PortfolioGallery from './components/PortfolioGallery';
 
 const auth = getAuth();
 const db = getDatabase();
 
-enum MenuState { Init, Default, About, Comms, Blog, Gallery, Misc }
+enum MenuState { Init, Default, About, Comms, Blog, GalleryMenu, TimelineGallery, PortfolioGallery, Misc }
 
 export default function Menu() {
   const [showLogin, setShowLogin] = useState(false);
@@ -36,6 +37,7 @@ export default function Menu() {
   const [isBlogOpen, setIsBlogOpen] = useState(false);
   const [isBlogItemOpen, setIsBlogItemOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isBGDisabled, setIsBGDisabled] = useState(false);
 
   const { isEditMode, setEditMode } = useUserStore();
 
@@ -154,10 +156,10 @@ export default function Menu() {
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (menuState === MenuState.Gallery) {
+    if (menuState === MenuState.TimelineGallery || menuState === MenuState.PortfolioGallery) {
       timer = setTimeout(() => {
         setIsGalleryOpen(true);
-      }, 1000);
+      }, 100);
     } else {
       setIsGalleryOpen(false);
     }
@@ -194,6 +196,7 @@ export default function Menu() {
     <PageLayout
       className='relative overflow-hidden flex items-center justify-center'
       bgLinks={Object.values(bgLinks)}
+      disableBg={isBGDisabled}
     >
       <AnimatePresence>
         {auth.currentUser && isEditMode && (menuState === MenuState.Default || menuState === MenuState.Init) && (
@@ -294,10 +297,14 @@ export default function Menu() {
       </motion.button>
 
       {auth.currentUser &&
-        <button className="absolute bottom-4 left-4 hover:underline z-[1000]" onClick={() => setEditMode(!isEditMode)}>
+        <button className="absolute bottom-10 left-4 hover:underline z-[10000] text-xs sm:font-sm" onClick={() => setEditMode(!isEditMode)}>
           toggle editor
         </button>
       }
+
+      <button className="absolute bottom-4 left-4 hover:underline z-[10000] text-xs sm:font-sm" onClick={() => setIsBGDisabled(!isBGDisabled)}>
+        toggle background
+      </button>
 
       <AnimatePresence>
         {showLogin && (
@@ -371,7 +378,7 @@ export default function Menu() {
               ? [0, half(150), half(-150)]
               : menuState === MenuState.Default
                 ? half(-150)
-                : menuState === MenuState.Gallery || menuState === MenuState.Blog
+                : menuState === MenuState.Blog
                   ? [half(-150), half(150), 0]
                   : 0,
           translateY:
@@ -379,28 +386,28 @@ export default function Menu() {
               ? [0, half(150), half(-150)]
               : menuState === MenuState.Default
                 ? half(-150)
-                : menuState === MenuState.Gallery || menuState === MenuState.Blog
+                : menuState === MenuState.Blog
                   ? [half(-150), half(150), 0]
                   : 0,
           width:
-            menuState === MenuState.About || menuState === MenuState.Comms || menuState === MenuState.Misc
+            menuState === MenuState.About || menuState === MenuState.Comms || menuState === MenuState.Misc || menuState === MenuState.GalleryMenu
               ? half(600)
-              : menuState === MenuState.Gallery
+              : menuState === MenuState.TimelineGallery || menuState === MenuState.PortfolioGallery
                 ? isGalleryOpen
                   ? "100%"
-                  : [half(300), half(300), half(600)]
+                  : [half(600), half(600), half(600)]
                 : menuState === MenuState.Blog
                   ? isBlogOpen
                     ? "100%"
                     : [half(300), half(300), half(600)]
                   : half(300),
           height:
-            menuState === MenuState.About || menuState === MenuState.Comms || menuState === MenuState.Misc
+            menuState === MenuState.About || menuState === MenuState.Comms || menuState === MenuState.Misc || menuState === MenuState.GalleryMenu
               ? half(600)
-              : menuState === MenuState.Gallery
+              : menuState === MenuState.TimelineGallery || menuState === MenuState.PortfolioGallery
                 ? isGalleryOpen
                   ? "100%"
-                  : [half(300), half(300), half(600)]
+                  : [half(600), half(600), half(600)]
                 : menuState === MenuState.Blog
                   ? isBlogOpen
                     ? "100%"
@@ -414,14 +421,16 @@ export default function Menu() {
               : 0.3,
           duration:
             menuState === MenuState.Init ? 1.5
-              : menuState === MenuState.Gallery || menuState === MenuState.Blog ? 0.7
+              : menuState === MenuState.TimelineGallery || menuState === MenuState.PortfolioGallery || menuState === MenuState.Blog ? 0.7
               : 0.3,
           ease: "easeInOut",
           times: [0, 0.5, 1],
         }}
       >
         <AnimatePresence>
-          { menuState !== MenuState.Init && menuState !== MenuState.Default && !isBlogItemOpen && (
+          { menuState !== MenuState.Init && menuState !== MenuState.Default 
+          && menuState != MenuState.TimelineGallery && menuState != MenuState.PortfolioGallery 
+          && !isBlogItemOpen && (
             <motion.div
               className='absolute top-0 sm:top-4 -left-5 sm:left-6 z-[900]'
               initial={{ opacity: 0, translateX: 50 }}
@@ -508,8 +517,33 @@ export default function Menu() {
           <BlogPage setIsBlogItemOpen={setIsBlogItemOpen}/>
         )}
 
-        { menuState === MenuState.Gallery && (
-          <Gallery />
+        <AnimatePresence>
+          { (menuState === MenuState.GalleryMenu) && (
+            <motion.div
+              className='absolute w-full h-full p-8 pt-16 items-center justify-center'
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: {delay:0}}}
+              transition={{
+                delay: 0.5,
+                duration: 1,
+                ease: "easeInOut",
+              }}
+            >
+              <GalleryMenu
+                onPortfolioClick = {() => {setMenuState(MenuState.PortfolioGallery)}}
+                onTimelineClick = {() => {setMenuState(MenuState.TimelineGallery)}}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        { menuState === MenuState.PortfolioGallery && (
+          <PortfolioGallery onBack={() => {setMenuState(MenuState.GalleryMenu)}}/>
+        )}
+
+        { menuState === MenuState.TimelineGallery && (
+          <TimelineGallery onBack={() => {setMenuState(MenuState.GalleryMenu)}}/>
         )}
 
         <AnimatePresence>
@@ -545,7 +579,7 @@ export default function Menu() {
           setMenuListVisible(false)
         }}
         onGalleryClicked={() => {
-          setMenuState(MenuState.Gallery)
+          setMenuState(MenuState.GalleryMenu)
           setMenuListVisible(false)
         }}
         onMiscClicked={() => {

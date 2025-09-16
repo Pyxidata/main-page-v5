@@ -7,12 +7,12 @@ import Spacer from "../../../shared/components/spacers/Spacer";
 import { SpacerStyle } from "../../../shared/styles/SpacerStyle";
 import EditableText from "../../../shared/components/editables/EditableText";
 import { useUserStore } from "../../../shared/stores/userStore";
-import { FragmentItemData } from "./Gallery";
 import { ref, onValue, push, update, remove, getDatabase } from "firebase/database";
+import { FragmentItemData } from "./TimelineGallery";
 
 const db = getDatabase();
 
-interface GallerysFragmentProps {
+interface TimelineFragmentProps {
   getCoordinatesRef?: React.MutableRefObject<(() => FragmentItemData[]) | null>;
   scrollableParentRef: React.RefObject<HTMLDivElement>;
   activeFragmentKey: string | null;
@@ -23,7 +23,7 @@ type Art = {
   img: string;
 }
 
-type GalleryItem = {
+type TimelineItem = {
   title: string;
   startDate: string;
   endDate?: string;
@@ -32,11 +32,11 @@ type GalleryItem = {
   color: string;
 }
 
-type GalleryItemWithFirebaseKey = GalleryItem & { firebaseKey: string };
+type TimelineItemWithKey = TimelineItem & { firebaseKey: string };
 
-export default function GallerysFragment({ getCoordinatesRef, scrollableParentRef, activeFragmentKey }: GallerysFragmentProps) {
+export default function TimelineFragment({ getCoordinatesRef, scrollableParentRef, activeFragmentKey }: TimelineFragmentProps) {
   const { isEditMode } = useUserStore();
-  const [localGallerys, setLocalGallerys] = useState<GalleryItemWithFirebaseKey[]>([]);
+  const [localGallerys, setLocalGallerys] = useState<TimelineItemWithKey[]>([]);
   const [imgEnabled, setImgEnabled] = useState(false);
 
   const galleryItemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -46,7 +46,7 @@ export default function GallerysFragment({ getCoordinatesRef, scrollableParentRe
     const galleryRef = ref(db, 'gallery/');
     const unsubscribe = onValue(galleryRef, (snapshot) => {
       const data = snapshot.val();
-      const loadedGallerys: GalleryItemWithFirebaseKey[] = [];
+      const loadedGallerys: TimelineItemWithKey[] = [];
       if (data) {
         Object.keys(data).forEach((key) => {
           loadedGallerys.push({
@@ -128,7 +128,7 @@ export default function GallerysFragment({ getCoordinatesRef, scrollableParentRe
 
   const handleAddGallery = () => {
     const newGalleryRef = push(ref(db, 'gallery/'));
-    const newGallery: GalleryItem = {
+    const newGallery: TimelineItem = {
       title: "New Timespan",
       startDate: `${new Date().getFullYear() - 1}-01-01`,
       endDate: new Date().toISOString().split('T')[0],
@@ -250,7 +250,16 @@ export default function GallerysFragment({ getCoordinatesRef, scrollableParentRe
 
               {/* Right side for horizontally scrollable images */}
               <div className="flex-1 w-full flex gap-2 items-center lg:overflow-x-auto">
-                {item.arts && Object.entries(item.arts).map(([artKey, art]) => (
+                {isEditMode && (
+                  <button
+                    onClick={() => handleAddArt(item.firebaseKey)}
+                    className="flex-shrink-0 w-24 h-24 rounded-md bg-gray-700 text-white flex items-center justify-center text-3xl font-light hover:bg-gray-600 transition-colors"
+                    title="Add Art"
+                  >
+                    +
+                  </button>
+                )}
+                {item.arts && Object.entries(item.arts).reverse().map(([artKey, art]) => (
                   <div key={artKey} className="relative group flex-shrink-0">
                     {imgEnabled &&
                       <img src={art.img} alt="Art" className="h-64 object-contain rounded-md" />
@@ -272,16 +281,6 @@ export default function GallerysFragment({ getCoordinatesRef, scrollableParentRe
                     )}
                   </div>
                 ))}
-                {isEditMode && (
-                  <button
-                    onClick={() => handleAddArt(item.firebaseKey)}
-                    className="flex-shrink-0 w-24 h-24 rounded-md bg-gray-700 text-white flex items-center justify-center text-3xl font-light hover:bg-gray-600 transition-colors"
-                    title="Add Art"
-                  >
-                    +
-                  </button>
-                )}
-
                 <div className="lg:hidden">&nbsp;</div>
               </div>
             </div>

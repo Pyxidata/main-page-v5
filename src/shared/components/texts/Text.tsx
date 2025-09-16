@@ -42,6 +42,7 @@ export default function Text({
     animationCharSet = "!@#$%^&*_+|-=\\`~123456788990<>{}[]()/?;:'\"",
 }: TextProps) {
     const [charStates, setCharStates] = useState<CharState[]>([]);
+    const [isAnimationComplete, setIsAnimationComplete] = useState(false);
     const animationFrameRef = useRef<number | null>(null);
     const startTimeRef = useRef<number | null>(null);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -80,9 +81,11 @@ export default function Text({
                 displayChar: char.originalChar,
                 isRevealed: true,
             })));
+            setIsAnimationComplete(true);
             return;
         }
 
+        setIsAnimationComplete(false);
         const initialSetup = initialCharStates.map(char => ({
             ...char,
             displayChar: char.isWhitespace ? char.originalChar : generateGibberishChar(),
@@ -137,6 +140,7 @@ export default function Text({
                     displayChar: char.originalChar,
                     isRevealed: true,
                 })));
+                setIsAnimationComplete(true);
                 animationFrameRef.current = null;
             }
         };
@@ -161,17 +165,18 @@ export default function Text({
         };
     }, [text, animate, animationDelay, animationDuration, generateGibberishChar, initialCharStates]);
 
-    const renderContent = useCallback(() => {
+    const renderAnimatedContent = useCallback(() => {
         const words: React.ReactNode[] = [];
         let currentWordChars: CharState[] = [];
+        let isNewLine = true;
 
-        const charWidthStyle = { display: 'inline-block' }; 
+        const charWidthStyle = { display: 'inline-block' };
 
-        charStates.forEach((char, index) => {
+        charStates.forEach((char) => {
             if (char.originalChar === '\n') {
                 if (currentWordChars.length > 0) {
                     words.push(
-                        <span key={`word-${index}`} style={{ display: 'inline-block' }}>
+                        <span key={`word-${words.length}`} style={{ display: 'inline-block' }}>
                             {currentWordChars.map((wc) => (
                                 <span key={`char-${wc.index}`} style={charWidthStyle}>
                                     {wc.displayChar}
@@ -182,24 +187,30 @@ export default function Text({
                     currentWordChars = [];
                 }
                 words.push(<br key={`char-br-${char.index}`} />);
+                isNewLine = true;
             } else if (char.originalChar === ' ') {
-                if (currentWordChars.length > 0) {
-                    words.push(
-                        <span key={`word-${index}`} style={{ display: 'inline-block' }}>
-                            {currentWordChars.map((wc) => (
-                                <span key={`char-${wc.index}`} style={charWidthStyle}>
-                                    {wc.displayChar}
-                                </span>
-                            ))}
-                        </span>
-                    );
-                    currentWordChars = [];
+                if (isNewLine) {
+                    isNewLine = false;
+                } else {
+                    if (currentWordChars.length > 0) {
+                        words.push(
+                            <span key={`word-${words.length}`} style={{ display: 'inline-block' }}>
+                                {currentWordChars.map((wc) => (
+                                    <span key={`char-${wc.index}`} style={charWidthStyle}>
+                                        {wc.displayChar}
+                                    </span>
+                                ))}
+                            </span>
+                        );
+                        currentWordChars = [];
+                    }
+                    words.push(<span key={`char-${char.index}`} style={charWidthStyle}>&nbsp;</span>);
                 }
-                words.push(<span key={`char-${char.index}`} style={charWidthStyle}>&nbsp;</span>);
+                isNewLine = false;
             } else if (char.originalChar === '\t') {
                 if (currentWordChars.length > 0) {
                     words.push(
-                        <span key={`word-${index}`} style={{ display: 'inline-block' }}>
+                        <span key={`word-${words.length}`} style={{ display: 'inline-block' }}>
                             {currentWordChars.map((wc) => (
                                 <span key={`char-${wc.index}`} style={charWidthStyle}>
                                     {wc.displayChar}
@@ -210,8 +221,10 @@ export default function Text({
                     currentWordChars = [];
                 }
                 words.push(<span key={`char-${char.index}`} style={charWidthStyle}>{char.displayChar}</span>);
+                isNewLine = false;
             } else {
                 currentWordChars.push(char);
+                isNewLine = false;
             }
         });
 
@@ -232,11 +245,8 @@ export default function Text({
 
 
     return (
-        <p
-            className={className}
-            style={style}
-        >
-            {renderContent()}
+        <p className={cn(className)} style={style}>
+            {isAnimationComplete ? text : renderAnimatedContent()}
         </p>
     );
 }

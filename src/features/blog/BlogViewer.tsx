@@ -29,7 +29,6 @@ type BlogViewerProps = {
 export default function BlogViewer({ initialBlogData, onBack }: BlogViewerProps): JSX.Element {
   const [blogPost, setBlogPost] = useState<BlogItem>(initialBlogData);
   const { isEditMode } = useUserStore();
-  const [editDate, setEditDate] = useState<string>(initialBlogData.date);
 
   useEffect(() => {
     if (!blogPost.id) return;
@@ -39,7 +38,6 @@ export default function BlogViewer({ initialBlogData, onBack }: BlogViewerProps)
       const data = snapshot.val();
       if (data) {
         setBlogPost({ id: blogPost.id, ...data });
-        setEditDate(data.date);
       }
     }, (dbError) => {
       console.error("Firebase fetch error:", dbError);
@@ -47,37 +45,6 @@ export default function BlogViewer({ initialBlogData, onBack }: BlogViewerProps)
 
     return () => unsubscribe();
   }, [blogPost.id]);
-
-  const handleEditorChange = async (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const updatedContent = event.target.value;
-    setBlogPost({ ...blogPost, content: updatedContent });
-    try {
-      await set(ref(database, `blogs/${blogPost.id}/content`), updatedContent);
-    } catch (error) {
-      console.error("Error updating blog content: ", error);
-    }
-  };
-
-  const handleTagChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedTagString = event.target.value;
-    setBlogPost({ ...blogPost, tag: updatedTagString });
-    try {
-      await set(ref(database, `blogs/${blogPost.id}/tag`), updatedTagString);
-    } catch (error) {
-      console.error("Error updating blog tags: ", error);
-    }
-  };
-
-  const handleDateChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedDate = event.target.value;
-    setEditDate(updatedDate);
-    setBlogPost({ ...blogPost, date: updatedDate });
-    try {
-      await set(ref(database, `blogs/${blogPost.id}/date`), updatedDate);
-    } catch (error) {
-      console.error("Error updating blog date: ", error);
-    }
-  };
 
   const currentTags = stringToTags(blogPost.tag);
   const contentWithLineBreaks = blogPost.content.replace(/\n/g, '<br/>\n\n\n');

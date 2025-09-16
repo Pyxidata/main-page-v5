@@ -162,7 +162,7 @@ export default function BlogPage({
   if (selectedBlog) {
     return (
       <div className="w-full h-full flex items-top justify-center">
-        <div className="w-full flex flex-col items-center p-4 sm:p-8 lg:p-0 lg:max-w-[800px]">
+        <div className="w-full flex flex-col items-center lg:max-w-[800px]">
           <BlogViewer
             initialBlogData={selectedBlog}
             onBack={() => setSelectedBlog(null)}

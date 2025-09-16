@@ -4,8 +4,9 @@ import { SpacerStyle } from "../../../shared/styles/SpacerStyle";
 import ConnectingLines, { Point } from "../../../shared/components/decorations/ConnectingLines";
 import Timeline, { Timespan } from "../../../shared/components/Timeline";
 import { motion, AnimatePresence } from 'framer-motion';
-import GallerysFragment from "./GalleryFragment";
+import GallerysFragment from "./TimelineFragment";
 import { cn } from "../../../util/cn";
+import BackButton from "../../../shared/components/buttons/BackButton";
 
 export interface FragmentItemData {
   key: string;
@@ -31,7 +32,7 @@ const getTimelineItemData = (item: FragmentItemData): Timespan => {
   };
 };
 
-export default function Gallery() {
+export default function TimelineGallery({onBack} : {onBack: () => void}) {
   const [pointsToConnect, setPointsToConnect] = useState<[Point, Point, Point, Point]>([
     {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}
   ]);
@@ -388,34 +389,47 @@ export default function Gallery() {
     return false;
   }, [])
   
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (scrollableContentDivRef.current) {
-        scrollableContentDivRef.current.scrollTo({
-          top: scrollableContentDivRef.current.scrollHeight,
-        });
-      }
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     if (scrollableContentDivRef.current) {
+  //       scrollableContentDivRef.current.scrollTo({
+  //         top: scrollableContentDivRef.current.scrollHeight,
+  //       });
+  //     }
+  //   }, 800);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (scrollableContentDivRef.current) {
-        scrollableContentDivRef.current.scrollTo({
-          top: 0,
-          behavior: 'smooth',
-        });
-      }
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     if (scrollableContentDivRef.current) {
+  //       scrollableContentDivRef.current.scrollTo({
+  //         top: 0,
+  //         behavior: 'smooth',
+  //       });
+  //     }
+  //   }, 2000);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <div
       className={cn("flex flex-col w-[90%] h-full", snapY() && "snap-y snap-mandatory")}
       ref={pageDivRef}
     >
+      <motion.div
+        className='absolute top-0 sm:top-4 -left-5 sm:left-6 z-[900]'
+        initial={{ opacity: 0, translateX: 50 }}
+        animate={{ opacity: 1, translateX: 0 }}
+        exit={{ opacity: 0, translateX: 0, transition: {delay:0} }}
+        transition={{
+          duration: 0.5,
+          delay: 0.5
+        }}
+      >
+        <BackButton onClick={onBack} />
+      </motion.div>
+
       <div
         className="relative flex items-center justify-between w-full h-full ml-2 sm:ml-16"
         ref={commonLayoutParentRef}

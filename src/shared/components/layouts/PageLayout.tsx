@@ -16,6 +16,8 @@ type PageLayoutProps = {
   fadeMs?: number;
   intervalMs?: number;
   initialDelayMs?: number;
+  // New prop to disable background images
+  disableBg?: boolean; 
 };
 
 const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
@@ -30,6 +32,7 @@ const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
       fadeMs = 2000,
       intervalMs = 10000,
       initialDelayMs = 10000,
+      disableBg = false, // Set default to false
     },
     ref
   ) => {
@@ -56,14 +59,16 @@ const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
     }, [noLoad, quickLoad, longLoad]);
 
     useEffect(() => {
-      bgLinks.forEach((src) => {
-        const img = new Image();
-        img.src = src;
-      });
-    }, [bgLinks]);
+      if (!disableBg && bgLinks.length > 0) {
+        bgLinks.forEach((src) => {
+          const img = new Image();
+          img.src = src;
+        });
+      }
+    }, [bgLinks, disableBg]);
 
     useEffect(() => {
-      if (bgLinks.length <= 1) return;
+      if (disableBg || bgLinks.length <= 1) return;
 
       startTimerRef.current = window.setTimeout(() => {
         setCurrentBgIndex((i) => (i + 1) % bgLinks.length);
@@ -76,11 +81,11 @@ const PageLayout = forwardRef<HTMLDivElement, PageLayoutProps>(
         if (startTimerRef.current) clearTimeout(startTimerRef.current);
         if (cycleTimerRef.current) clearInterval(cycleTimerRef.current);
       };
-    }, [bgLinks.length, intervalMs, initialDelayMs]);
+    }, [bgLinks.length, intervalMs, initialDelayMs, disableBg]);
 
     return (
       <div className="relative w-full flex justify-center h-screen overflow-hidden">
-        {bgLinks.length > 0 && (
+        {!disableBg && bgLinks.length > 0 && (
           <div className="absolute inset-0">
             <AnimatePresence>
               <motion.div

@@ -36,7 +36,7 @@ useEffect(() => {
 }, []);
 
   return (
-    <div className='w-full h-full flex flex-col items-center justify-between'>
+    <div className='w-full h-full flex flex-col items-center justify-between overflow-hidden'>
 
       <AnimatePresence>
         <motion.div
@@ -67,7 +67,6 @@ useEffect(() => {
         path="aboutMe"
         field="text"
         label="My description"
-        animate
       />
 
       <EditableField
