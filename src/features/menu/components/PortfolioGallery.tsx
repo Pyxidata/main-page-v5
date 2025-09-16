@@ -111,7 +111,7 @@ export default function PortfolioGallery({onBack} : {onBack: () => void}) {
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
           >
-            <Spinner size={250} dotSize={50}/>
+            <Spinner size={170} dotSize={30}/>
           </motion.div>
         )}
       </AnimatePresence>
@@ -182,11 +182,11 @@ export default function PortfolioGallery({onBack} : {onBack: () => void}) {
 
         <Spacer className={SpacerStyle.Section} />
  
-        <AnimatedHorizontalLine stay delay={1}/>
+        <AnimatedHorizontalLine stay delay={4}/>
 
         <Spacer className={SpacerStyle.Section} />
 
-        <div className="flex flex-col items-center gap-16 w-2/3">
+        <div className="flex flex-col items-center gap-16 w-full lg:w-2/3">
           {data?.map((item) => (
             <div key={item.key} className="flex flex-col items-center">
               <img src={item.url} alt={`image: ${item.key}`} className="w-screen max-h-screen object-contain" />

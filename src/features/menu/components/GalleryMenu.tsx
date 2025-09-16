@@ -16,7 +16,7 @@ export default function GalleryMenu({
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
-      <Text text="here are some other neat stuff i made!" animate />
+      <Text text="click to see some drawings i've made!" animate />
 
       <Spacer className='h-8 sm:h-16' />
 
