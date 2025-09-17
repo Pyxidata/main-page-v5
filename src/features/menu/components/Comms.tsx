@@ -5,10 +5,11 @@ import Spacer from '../../../shared/components/spacers/Spacer';
 import { SpacerStyle } from '../../../shared/styles/SpacerStyle';
 import EditableText from '../../../shared/components/editables/EditableText';
 import Text from '../../../shared/components/texts/Text';
-import VGenLogo from '../../../assets/vgen.png';
+import VGenLogo from '../../../assets/kofi.png';
 import AnimatedChevron from '../../../shared/components/decorations/AnimatedChevron';
 import { cn } from '../../../util/cn';
 import { TextStyle } from '../../../shared/styles/TextStyle';
+import EditableField from '../../../shared/components/editables/EditableField';
 
 const db = getDatabase();
 
@@ -39,7 +40,7 @@ useEffect(() => {
     <div className='w-full h-full flex flex-col items-center justify-center'>
 
       <Text 
-        text="i primarily do commissions on vgen!"
+        text="i primarily do commissions on kofi!"
         animate
       />
 
@@ -50,7 +51,7 @@ useEffect(() => {
       </div>
 
       <a
-        className="absolute w-24 h-24 sm:w-48 sm:h-48 rounded-full bg-white/50 hover:bg-[#B8FF26] transition duration-500"
+        className="absolute w-24 h-24 sm:w-48 sm:h-48 p-6 rounded-full hover:bg-[#FF6433] border-4 border-white/50 hover:border-white transition duration-500"
         href={data?.url}
         target="_blank"
         rel="noopener noreferrer"
@@ -70,6 +71,13 @@ useEffect(() => {
         field="text"
         label="Description"
         animate
+      />
+
+      <EditableField
+        defaultValue={data?.url || ""}
+        path="comms"
+        field="url"
+        label="URL"
       />
     </div>
   );
